@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewData["Title"] = "New Order";
+}
+
+<script>
+    window.lineItems = [];
+    function loadData() {
+        var dataType = 'application/json; charset=utf-8';
+
+        $.ajax({
+            url: '/Product/GetAll',
+            contentType: dataType,
+            success: function (result) {
+                if (result != null) {
+                    window.products = result;
+                    for (var i = 0; i < result.length; ++i) {
+                        var option = document.createElement("option");
+                        option.text = result[i].name;
+                        option.value = result[i].id;
+                        var select = document.getElementById("cmbProduct");
+                        select.appendChild(option);
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    function addProduct() {
+        var productID = $("#cmbProduct").val();
+        var products = window.products;
+        for (var i = 0; i < products.length; ++i) {
+            if (products[i].id == productID) {
+                window.lineItems.push(products[i]);
+            }
+        }
+        updateLineItems();
+    }
+    setTimeout(loadData, 3000);
+
+    function updateLineItems() {
+        var htmls = ['<table class="table">', '<thead>', '<tr>', '<th>Name</th>', '<th>Price</th>', '</tr>', '</thead>', '<tbody>'];
+
+        for (var i = 0; i < window.lineItems.length; ++i) {
+            htmls.push('<tr><td>' + window.lineItems[i].name + '</td><td>' + window.lineItems[i].price + '</td></tr>')
+        }
+
+        htmls.push('</tbody>');
+        htmls.push('</table>')
+
+        document.getElementById('lineitems').innerHTML = htmls.join('');
+    }
+
+    function createSO() {
+        var dataType = 'application/json';
+        $.ajax({
+            type: "POST",
+            url: "/salesorder/register",
+            data: {
+                name: $("#txtName").val(),
+                items: window.lineItems
+            },
+            complete: function () {
+                document.location = '/SalesOrder';
+            },
+            dataType: dataType
+        });
+    }
+</script>
+
+<h1>New SO</h1>
+
+<form>
+    <div class="form-group">
+        <label for="txtName">Name</label>
+        <input type="text" class="form-control" id="txtName" placeholder="Name">
+    </div>
+
+    <div class="form-group">
+        <label for="cmbProduct">Product</label>
+        <select id="cmbProduct" class="selectpicker">
+        </select>
+        <button onclick="javascript: addProduct();return false;" class="btn">Add</button>
+    </div>
+
+    <p>Line Items</p>
+    <div id="lineitems"></div>
+    <hr />
+
+    <button onclick="javascript: createSO();return false;" class="btn btn-primary">Create</button>
+</form>
+

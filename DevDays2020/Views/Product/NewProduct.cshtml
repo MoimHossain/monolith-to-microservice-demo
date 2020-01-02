@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "New Product";
+}
+
+<script>
+    function createProduct() {
+        var dataType = 'application/json';
+        $.ajax({
+            type: "POST",
+            url: "/product/register",
+            data: {
+                name: $("#txtName").val(),
+                descroption: $("#txtDesc").val(),
+                price: $("#txtNumber").val()
+            },
+            complete: function () {
+                console.log('We are here');
+                document.location = '/Product';
+            },
+            dataType: dataType
+        });
+
+
+    }
+</script>
+
+<h1>New Product</h1>
+
+<form>
+    <div class="form-group">
+        <label for="txtName">Name</label>
+        <input type="text" class="form-control" id="txtName" placeholder="Name">
+
+    </div>
+    <div class="form-group">
+        <label for="txtDesc">Description</label>
+        <input type="text" class="form-control" id="txtDesc" placeholder="Description">
+
+    </div>
+
+    <div class="form-group">
+        <label for="txtNumber">Price</label>
+        <input type="number" class="form-control" id="txtNumber" placeholder="Price">
+
+    </div>
+
+
+    <button onclick="javascript: createProduct();return false;" class="btn btn-primary">Create</button>
+</form>
+
