@@ -1,4 +1,5 @@
-﻿using DevDays2020.Models;
+﻿using DevDays2020.Controllers;
+using DevDays2020.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Auth;
 using System;
@@ -21,6 +22,21 @@ namespace DevDays2020.Data
         {
             // for now it's good
             this.Init().Wait();
+        }
+
+        public  async Task<SalesOrderVM> GetSOAsync(Guid id)
+        {
+            var so = await Table.GetAsync<SalesOrder>(SOPartition, id.ToSafeStorageKey());
+            var items = await Table.GetAllFromPartition(id.ToSafeStorageKey());
+
+            var vm = new SalesOrderVM { Name = so.Name, Items = new List<LineItem>() };
+
+            foreach (var item in items)
+            {
+                vm.Items.Add(await item.Unwrap<LineItem>());
+            }
+
+            return vm;
         }
 
         public async Task<List<SalesOrder>> GetAllAsync()

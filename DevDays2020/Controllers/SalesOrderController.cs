@@ -30,6 +30,12 @@ namespace DevDays2020.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Show(Guid id)
+        {
+            ViewData["data"] = await salesOrderTable.GetSOAsync(id);
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register([FromForm] SalesOrderVM so)
         {

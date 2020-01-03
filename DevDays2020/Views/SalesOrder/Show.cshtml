@@ -1,0 +1,44 @@
+﻿
+@{
+    var so = ViewData["data"] as DevDays2020.Controllers.SalesOrderVM;
+}
+@{
+    ViewData["Title"] = @so.Name;
+
+}
+
+
+
+    <h1>@so.Name</h1>
+
+<form>
+
+
+
+    <p>Line Items</p>
+    <table class="display table table-bordered">
+        <thead>
+            <tr>
+                <th data-field="name">Name</th>
+                <th data-field="price">Price</th>
+                <th data-field="id">ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var lineItem in so.Items)
+            {
+                <tr>
+                    <td>@lineItem.Name</td>
+                    <td>@lineItem.Price</td>
+                    <td>@lineItem.ID</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <hr />
+
+    <button onclick="javascript: document.location = '/salesorder'; return false;" class="btn btn-primary">Close</button>
+</form>
+

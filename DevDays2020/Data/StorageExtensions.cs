@@ -21,8 +21,8 @@ namespace DevDays2020.Data
 
         public static StorageCredentials GetStorageCredentials()
         {
-            var accountName = "";
-            var storageKey = "";
+            var accountName = Environment.GetEnvironmentVariable("devday2020saname");
+            var storageKey = Environment.GetEnvironmentVariable("devday2020sakey");
 
             var credentials = new StorageCredentials(accountName, storageKey);
             return credentials;
